@@ -1,3 +1,6 @@
+#ifndef __SHOPPING_CART_CPP_CART_HPP__
+#define __SHOPPING_CART_CPP_CART_HPP__
+
 #include <stdexcept>
 #include <string>
 
@@ -47,3 +50,5 @@ class Cart
     }
   }
 };
+
+#endif
