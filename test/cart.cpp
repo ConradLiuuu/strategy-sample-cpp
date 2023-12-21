@@ -19,46 +19,46 @@ class CartTest : public testing::Test
 // Test for black cat
 TEST_F(CartTest, black_cat_with_light_weight)
 {
-  double shipping_fee = this->cart_.shippingFee(this->black_cat_, 30, 20, 10, 5);
+  double shipping_fee = this->cart_.shippingFee(this->black_cat_, Product(30, 20, 10, 5));
   
-  this->feeShouldBe(shipping_fee, 150);
+  this->feeShouldBe(150, shipping_fee);
 }
 
 TEST_F(CartTest, black_cat_with_heavy_weight)
 {
-  double shipping_fee = this->cart_.shippingFee(this->black_cat_, 30, 20, 10, 50);
+  double shipping_fee = this->cart_.shippingFee(this->black_cat_, Product(30, 20, 10, 50));
   
-  this->feeShouldBe(shipping_fee, 500);
+  this->feeShouldBe(500, shipping_fee);
 }
 
 // Test for hsinchu
 TEST_F(CartTest, hsinchu_with_small_size)
 {
-  double shipping_fee = this->cart_.shippingFee(this->hsinchu_, 30, 20, 10, 50);
+  double shipping_fee = this->cart_.shippingFee(this->hsinchu_, Product(30, 20, 10, 50));
   
-  this->feeShouldBe(shipping_fee, 144);
+  this->feeShouldBe(144, shipping_fee);
 }
 
 TEST_F(CartTest, hsinchu_with_huge_size)
 {
-  double shipping_fee = this->cart_.shippingFee(this->hsinchu_, 100, 20, 10, 50);
+  double shipping_fee = this->cart_.shippingFee(this->hsinchu_, Product(100, 20, 10, 50));
   
-  this->feeShouldBe(shipping_fee, 480);
+  this->feeShouldBe(480, shipping_fee);
 }
 
 // Test for post office
 TEST_F(CartTest, post_office_by_weight)
 {
-  double shipping_fee = this->cart_.shippingFee(this->post_office_, 100, 20, 10, 3);
+  double shipping_fee = this->cart_.shippingFee(this->post_office_, Product(100, 20, 10, 3));
   
-  this->feeShouldBe(shipping_fee, 110);
+  this->feeShouldBe(110, shipping_fee);
 }
 
 TEST_F(CartTest, post_office_by_size)
 {
-  double shipping_fee = this->cart_.shippingFee(this->post_office_, 100, 20, 10, 300);
+  double shipping_fee = this->cart_.shippingFee(this->post_office_, Product(100, 20, 10, 300));
   
-  this->feeShouldBe(shipping_fee, 440);
+  this->feeShouldBe(440, shipping_fee);
 }
 
 

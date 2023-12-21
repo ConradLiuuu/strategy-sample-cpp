@@ -3,51 +3,80 @@
 
 #include <stdexcept>
 #include <string>
+#include <algorithm>
+#include <unordered_map>
+#include <functional>
+
+#include "product.hpp"
 
 using std::invalid_argument;
 using std::string;
+using std::min;
+using std::unordered_map;
+using std::function;
+
+using MyFunctionType = function<double(Product)>;
 
 class Cart
 {
  public:
-  double shippingFee(const string& shipper, const double& length, const double& width, const double& height, const double& weight)
+  unordered_map<string, MyFunctionType> shippingFeeFuncs()
   {
-    if (shipper == "black cat")
-    {
-      if (weight > 20)
-      {
-        return 500;
-      }
-      else
-      {
-        return 100 + weight * 10;
-      }
-    }
-    else if (shipper == "hsinchu")
-    {
-      double size = length * width * height;
+    unordered_map<string, MyFunctionType> my_dict;
 
-      if ((length > 100) || (width > 100) || (height > 100))
-      {
-        return size * 0.00002 * 1100 + 500;
-      }
-      else
-      {
-        return size * 0.00002 * 1200;
-      }
-    }
-    else if (shipper == "post office")
-    {
-      double fee_by_weight = 80 + weight * 10;
-      double size = length * width * height;
-      double fee_by_size = size * 0.00002 * 1100;
+    my_dict["black cat"] = calculateFeeByBlackCat;
+    my_dict["hsinchu"] = calculateFeeByHsinchu;
+    my_dict["post office"] = calculateFeeByPostOffice;
 
-      return fee_by_weight < fee_by_size ? fee_by_weight : fee_by_size;
+    return my_dict;
+  }
+
+  double shippingFee(const string& shipper, Product product)
+  {
+    auto dict = this->shippingFeeFuncs();
+    auto it = dict.find(shipper);
+
+    if (it != dict.end())
+    {
+      return it->second(product);
     }
     else
     {
-      throw invalid_argument("shipper not exist.");
+      throw invalid_argument("shipper not exist");
     }
+  }
+  
+ private:
+  static double calculateFeeByBlackCat(Product product)
+  {
+    if (product.getWeight() > 20)
+    {
+      return 500;
+    }
+    else
+    {
+      return 100 + product.getWeight() * 10;
+    }
+  }
+
+  static double calculateFeeByHsinchu(Product product)
+  {
+    if ((product.getLength() > 100) || (product.getWidth() > 100) || (product.getHeight() > 100))
+    {
+      return product.getSize() * 0.00002 * 1100 + 500;
+    }
+    else
+    {
+      return product.getSize() * 0.00002 * 1200;
+    }
+  }
+
+  static double calculateFeeByPostOffice(Product product)
+  {
+    double fee_by_weight = 80 + product.getWeight() * 10;
+    double fee_by_size = product.getSize() * 0.00002 * 1100;
+
+    return min(fee_by_weight, fee_by_size);
   }
 };
 
